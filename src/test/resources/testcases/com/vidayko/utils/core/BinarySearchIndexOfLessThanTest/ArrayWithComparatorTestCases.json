@@ -1,0 +1,51 @@
+[
+  {
+    "scenario": "1",
+    "key": [2, 0],
+    "array": [[0, 0], [1, 0], [3, 0]],
+    "reverseOrder": false,
+    "expected": 1
+  },
+  {
+    "scenario": "2",
+    "key": [3, 0],
+    "array": [[0, 0], [1, 0], [2, 0]],
+    "reverseOrder": false,
+    "expected": 2
+  },
+  {
+    "scenario": "3",
+    "key": [-1, 0],
+    "array": [[0, 0], [1, 0], [2, 0]],
+    "reverseOrder": false,
+    "expected": -1
+  },
+  {
+    "scenario": "4",
+    "key": [0, 0],
+    "array": [[0, 0], [1, 0], [1, 0], [2, 0], [2, 0], [2, 0], [3, 0]],
+    "reverseOrder": false,
+    "expected": -1
+  },
+  {
+    "scenario": "5",
+    "key": [1, 0],
+    "array": [[0, 0], [1, 0], [1, 0], [2, 0], [2, 0], [2, 0], [3, 0]],
+    "reverseOrder": false,
+    "expected": 0
+  },
+  {
+    "scenario": "6",
+    "key": [2, 0],
+    "array": [[0, 0], [0, 0], [1, 0], [1, 0], [2, 0], [2, 0], [2, 0], [3, 0]],
+    "reverseOrder": false,
+    "expected": 3
+  },
+  {
+    "scenario": "7",
+    "key": [4, 0],
+    "array": [[0, 0], [0, 0], [1, 0], [1, 0], [2, 0], [2, 0], [2, 0], [3, 0]],
+    "reverseOrder": false,
+    "expected": 7
+  }
+]

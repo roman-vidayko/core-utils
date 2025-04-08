@@ -1,0 +1,44 @@
+[
+  {
+    "scenario": "1",
+    "key": "CA",
+    "array": ["AA", "BA", "DA"],
+    "expected": 1
+  },
+  {
+    "scenario": "2",
+    "key": "DA",
+    "array": ["AA", "BA", "CA"],
+    "expected": 2
+  },
+  {
+    "scenario": "3",
+    "key": "00",
+    "array": ["AA", "BA", "CA"],
+    "expected": -1
+  },
+  {
+    "scenario": "4",
+    "key": "AA",
+    "array": ["AA", "BA", "BA", "CA", "CA", "CA", "DA"],
+    "expected": -1
+  },
+  {
+    "scenario": "5",
+    "key": "BA",
+    "array": ["AA", "BA", "BA", "CA", "CA", "CA", "DA"],
+    "expected": 0
+  },
+  {
+    "scenario": "6",
+    "key": "CA",
+    "array": ["AA", "AA", "BA", "BA", "CA", "CA", "CA", "DA"],
+    "expected": 3
+  },
+  {
+    "scenario": "7",
+    "key": "EA",
+    "array": ["AA", "AA", "BA", "BA", "CA", "CA", "CA", "DA"],
+    "expected": 7
+  }
+]
