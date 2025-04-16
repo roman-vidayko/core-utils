@@ -1,0 +1,50 @@
+[
+  {
+    "scenario": "1",
+    "key": 2,
+    "array": [3, 1, 0],
+    "reverseOrder": true,
+    "expected": -2
+  },
+  {
+    "scenario": "2",
+    "key": 3,
+    "array": [2, 1, 0],
+    "reverseOrder": true,
+    "expected": -1
+  },
+  {
+    "scenario": "3",
+    "key": -1,
+    "array": [2, 1, 0],
+    "reverseOrder": true,
+    "expected": -4
+  },
+  {
+    "scenario": "3",
+    "key": 0,
+    "array": [3, 2, 2, 2, 1, 1, 0],
+    "reverseOrder": true,
+    "expected": 6
+  },
+  {
+    "scenario": "5",
+    "key": 1,
+    "array": [3, 2, 2, 2, 1, 1, 0],
+    "reverseOrder": true,
+    "expected": 5
+  },
+  {
+    "scenario": "6",
+    "key": 2,
+    "array": [3, 2, 2, 2, 1, 1, 0, 0],
+    "expected": 3
+  },
+  {
+    "scenario": "7",
+    "key": 4,
+    "array": [3, 2, 2, 2, 1, 1, 0, 0],
+    "reverseOrder": true,
+    "expected": -1
+  }
+]

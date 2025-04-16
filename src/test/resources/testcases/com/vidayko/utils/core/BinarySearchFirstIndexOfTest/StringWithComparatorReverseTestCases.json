@@ -1,0 +1,51 @@
+[
+  {
+    "scenario": "1",
+    "key": "BA",
+    "array": ["DA", "CA", "AA"],
+    "reverseOrder": true,
+    "expected": -3
+  },
+  {
+    "scenario": "2",
+    "key": "AA",
+    "array": ["DA", "CA", "BA"],
+    "reverseOrder": true,
+    "expected": -4
+  },
+  {
+    "scenario": "3",
+    "key": "EA",
+    "array": ["DA", "CA", "BA"],
+    "reverseOrder": true,
+    "expected": -1
+  },
+  {
+    "scenario": "4",
+    "key": "DA",
+    "array": ["DA", "CA", "CA", "BA", "BA", "BA", "AA"],
+    "reverseOrder": true,
+    "expected": 0
+  },
+  {
+    "scenario": "5",
+    "key": "CA",
+    "array": ["DA", "CA", "CA", "BA", "BA", "BA", "AA"],
+    "reverseOrder": true,
+    "expected": 1
+  },
+  {
+    "scenario": "6",
+    "key": "BA",
+    "array": ["DA", "DA", "CA", "CA", "BA", "BA", "BA", "AA"],
+    "reverseOrder": true,
+    "expected": 4
+  },
+  {
+    "scenario": "7",
+    "key": -1,
+    "array": ["DA", "DA", "CA", "CA", "BA", "BA", "BA", "AA"],
+    "reverseOrder": true,
+    "expected": -9
+  }
+]

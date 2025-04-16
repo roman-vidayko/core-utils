@@ -1,0 +1,50 @@
+[
+  {
+    "scenario": "1",
+    "key": "C",
+    "array": ["A", "B", "D"],
+    "reverseOrder": false,
+    "expected": -3
+  },
+  {
+    "scenario": "2",
+    "key": "D",
+    "array": ["A", "B", "C"],
+    "reverseOrder": false,
+    "expected": -4
+  },
+  {
+    "scenario": "3",
+    "key": "0",
+    "array": ["A", "B", "C"],
+    "reverseOrder": false,
+    "expected": -1
+  },
+  {
+    "scenario": "3",
+    "key": "A",
+    "array": ["A", "B", "B", "C", "C", "C", "D"],
+    "reverseOrder": false,
+    "expected": 0
+  },
+  {
+    "scenario": "5",
+    "key": "B",
+    "array": ["A", "B", "B", "C", "C", "C", "D"],
+    "reverseOrder": false,
+    "expected": 2
+  },
+  {
+    "scenario": "6",
+    "key": "C",
+    "array": ["A", "A", "B", "B", "C", "C", "C", "D"],
+    "expected": 6
+  },
+  {
+    "scenario": "7",
+    "key": "E",
+    "array": ["A", "A", "B", "B", "C", "C", "C", "D"],
+    "reverseOrder": false,
+    "expected": -9
+  }
+]
