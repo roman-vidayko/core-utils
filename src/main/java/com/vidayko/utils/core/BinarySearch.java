@@ -6,10 +6,13 @@
 package com.vidayko.utils.core;
 
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * Utility class providing extended binary search operations for primitive and object (generic)
- * arrays/lists, with comparator support. Guarantees O(log n) time and O(1) space complexity.
+ * arrays/lists, with comparators and mapping functions support.
+ * <p>
+ * Guarantees O(log n) time and O(1) space complexity.
  * <p>
  * These methods enhance the standard {@code Arrays.binarySearch()} behavior by offering:
  * <ul>
@@ -1131,6 +1134,7 @@ public class BinarySearch {
    *
    * @param key   the value to search for
    * @param array the sorted array to search
+   * @param <T>   the type of elements in the array
    * @return the index of the last occurrence of the key if it is found; otherwise, returns
    * -(insertion point) - 1, where the insertion point is the index at which the key would be
    * inserted to maintain the sorted order. The return value is non-negative if and only if the key
@@ -1145,23 +1149,65 @@ public class BinarySearch {
    * sorted array of objects. The array must be sorted according to the order induced by the
    * specified comparator before calling this method.
    *
+   * @param key      the value to search for
+   * @param array    the sorted array to search
+   * @param function a mapping function that extracts the comparable key from each list element
+   * @param <K>      the type of the key, which must be {@link Comparable}
+   * @param <T>      the type of elements in the array
+   * @return the index of the last occurrence of the key if it is found; otherwise, returns
+   * -(insertion point) - 1, where the insertion point is the index at which the key would be
+   * inserted to maintain the sorted order. The return value is non-negative if and only if the key
+   * is found.
+   */
+  public static <K extends Comparable<K>, T> int lastIndexOf(K key, T[] array,
+      Function<T, K> function) {
+    return lastIndexOf(key, array, Comparator.naturalOrder(), function);
+  }
+
+  /**
+   * Performs a binary search to find the index of the last occurrence of the specified key in the
+   * sorted array of objects. The array must be sorted according to the order induced by the
+   * specified comparator before calling this method.
+   *
    * @param key        the value to search for
    * @param array      the sorted array to search
    * @param comparator the comparator used to compare array elements and the search key
+   * @param <T>        the type of elements in the array
    * @return the index of the last occurrence of the key if it is found; otherwise, returns
    * -(insertion point) - 1, where the insertion point is the index at which the key would be
    * inserted to maintain the sorted order. The return value is non-negative if and only if the key
    * is found.
    */
   public static <T> int lastIndexOf(T key, T[] array, Comparator<T> comparator) {
+    return lastIndexOf(key, array, comparator, o -> o);
+  }
+
+  /**
+   * Performs a binary search to find the index of the last occurrence of the specified key in the
+   * sorted array of objects. The array must be sorted according to the order induced by the
+   * specified comparator before calling this method.
+   *
+   * @param key        the value to search for
+   * @param array      the sorted array to search
+   * @param comparator the comparator used to compare array elements and the search key
+   * @param function   a mapping function that extracts the comparable key from each list element
+   * @param <K>        the type of the key
+   * @param <T>        the type of elements in the array
+   * @return the index of the last occurrence of the key if it is found; otherwise, returns
+   * -(insertion point) - 1, where the insertion point is the index at which the key would be
+   * inserted to maintain the sorted order. The return value is non-negative if and only if the key
+   * is found.
+   */
+  public static <K, T> int lastIndexOf(K key, T[] array, Comparator<K> comparator,
+      Function<T, K> function) {
     int index = Integer.MIN_VALUE;
     int left = 0, right = array.length - 1;
     while (left <= right) {
       final int mid = (left + right) >>> 1;
-      if (0 == comparator.compare(array[mid], key)) {
+      if (0 == comparator.compare(function.apply(array[mid]), key)) {
         index = mid;
         left = mid + 1;
-      } else if (0 > comparator.compare(array[mid], key)) {
+      } else if (0 > comparator.compare(function.apply(array[mid]), key)) {
         left = mid + 1;
       } else {
         right = mid - 1;
@@ -1177,12 +1223,33 @@ public class BinarySearch {
    *
    * @param key   the value to compare against
    * @param array the sorted array to search
+   * @param <T>   the type of elements in the array
    * @return the index of the first element greater than key, if such an element exists; otherwise,
    * returns -(insertion point) - 1, where the insertion point is the index at which the key would
    * be inserted to maintain the sorted order.
    */
   public static <T extends Comparable<T>> int indexOfGreaterThan(T key, T[] array) {
     return indexOfGreaterThan(key, array, Comparator.naturalOrder());
+  }
+
+
+  /**
+   * Performs a binary search to find the index of the first element greater than the specified key
+   * in a sorted array of objects. The array must be sorted according to the order induced by the
+   * specified comparator before calling this method.
+   *
+   * @param key      the value to compare against
+   * @param array    the sorted array to search
+   * @param function a mapping function that extracts the comparable key from each list element
+   * @param <K>      the type of the key, which must be {@link Comparable}
+   * @param <T>      the type of elements in the array
+   * @return the index of the first element greater than key, if such an element exists; otherwise,
+   * returns -(insertion point) - 1, where the insertion point is the index at which the key would
+   * be inserted to maintain the sorted order.
+   */
+  public static <K extends Comparable<K>, T> int indexOfGreaterThan(K key, T[] array,
+      Function<T, K> function) {
+    return indexOfGreaterThan(key, array, Comparator.naturalOrder(), function);
   }
 
   /**
@@ -1193,12 +1260,33 @@ public class BinarySearch {
    * @param key        the value to compare against
    * @param array      the sorted array to search
    * @param comparator the comparator used to compare array elements and the search key
+   * @param <T>        the type of elements in the array
    * @return the index of the first element greater than key, if such an element exists; otherwise,
    * returns -(insertion point) - 1, where the insertion point is the index at which the key would
    * be inserted to maintain the sorted order.
    */
   public static <T> int indexOfGreaterThan(T key, T[] array, Comparator<T> comparator) {
-    int lastIndex = lastIndexOf(key, array, comparator);
+    return indexOfGreaterThan(key, array, comparator, o -> o);
+  }
+
+  /**
+   * Performs a binary search to find the index of the first element greater than the specified key
+   * in a sorted array of objects. The array must be sorted according to the order induced by the
+   * specified comparator before calling this method.
+   *
+   * @param key        the value to compare against
+   * @param array      the sorted array to search
+   * @param comparator the comparator used to compare array elements and the search key
+   * @param function   a mapping function that extracts the comparable key from each list element
+   * @param <K>        the type of the key
+   * @param <T>        the type of elements in the array
+   * @return the index of the first element greater than key, if such an element exists; otherwise,
+   * returns -(insertion point) - 1, where the insertion point is the index at which the key would
+   * be inserted to maintain the sorted order.
+   */
+  public static <K, T> int indexOfGreaterThan(K key, T[] array, Comparator<K> comparator,
+      Function<T, K> function) {
+    int lastIndex = lastIndexOf(key, array, comparator, function);
     int insertionPoint = lastIndex >= 0 ? lastIndex + 1 : -lastIndex - 1;
     return 0 < insertionPoint && insertionPoint < array.length ?
         insertionPoint : -insertionPoint - 1;
@@ -1210,6 +1298,7 @@ public class BinarySearch {
    *
    * @param key   the value to search for
    * @param array the sorted array to search
+   * @param <T>   the type of elements in the array
    * @return the index of the first occurrence of the key if it is found; otherwise, returns
    * -(insertion point) - 1, where the insertion point is the index at which the key would be
    * inserted to maintain the sorted order. The return value is non-negative if and only if the key
@@ -1224,23 +1313,65 @@ public class BinarySearch {
    * sorted array of objects. The array must be sorted according to the order induced by the
    * specified comparator before calling this method.
    *
+   * @param key      the value to search for
+   * @param array    the sorted array to search
+   * @param function a mapping function that extracts the comparable key from each list element
+   * @param <K>      the type of the key, which must be {@link Comparable}
+   * @param <T>      the type of elements in the array
+   * @return the index of the first occurrence of the key if it is found; otherwise, returns
+   * -(insertion point) - 1, where the insertion point is the index at which the key would be
+   * inserted to maintain the sorted order. The return value is non-negative if and only if the key
+   * is found.
+   */
+  public static <K extends Comparable<K>, T> int firstIndexOf(K key, T[] array,
+      Function<T, K> function) {
+    return firstIndexOf(key, array, Comparator.naturalOrder(), function);
+  }
+
+  /**
+   * Performs a binary search to find the index of the first occurrence of the specified key in the
+   * sorted array of objects. The array must be sorted according to the order induced by the
+   * specified comparator before calling this method.
+   *
    * @param key        the value to search for
    * @param array      the sorted array to search
    * @param comparator the comparator used to compare array elements and the search key
+   * @param <T>        the type of elements in the array
    * @return the index of the first occurrence of the key if it is found; otherwise, returns
    * -(insertion point) - 1, where the insertion point is the index at which the key would be
    * inserted to maintain the sorted order. The return value is non-negative if and only if the key
    * is found.
    */
   public static <T> int firstIndexOf(T key, T[] array, Comparator<T> comparator) {
+    return firstIndexOf(key, array, comparator, a -> a);
+  }
+
+  /**
+   * Performs a binary search to find the index of the first occurrence of the specified key in the
+   * sorted array of objects. The array must be sorted according to the order induced by the
+   * specified comparator before calling this method.
+   *
+   * @param key        the value to search for
+   * @param array      the sorted array to search
+   * @param comparator the comparator used to compare array elements and the search key
+   * @param function   a mapping function that extracts the comparable key from each list element
+   * @param <K>        the type of the key
+   * @param <T>        the type of elements in the array
+   * @return the index of the first occurrence of the key if it is found; otherwise, returns
+   * -(insertion point) - 1, where the insertion point is the index at which the key would be
+   * inserted to maintain the sorted order. The return value is non-negative if and only if the key
+   * is found.
+   */
+  public static <K, T> int firstIndexOf(K key, T[] array, Comparator<K> comparator,
+      Function<T, K> function) {
     int index = Integer.MIN_VALUE;
     int left = 0, right = array.length - 1;
     while (left <= right) {
       final int mid = (left + right) >>> 1;
-      if (0 == comparator.compare(array[mid], key)) {
+      if (0 == comparator.compare(function.apply(array[mid]), key)) {
         index = mid;
         right = mid - 1;
-      } else if (0 < comparator.compare(array[mid], key)) {
+      } else if (0 < comparator.compare(function.apply(array[mid]), key)) {
         right = mid - 1;
       } else {
         left = mid + 1;
@@ -1255,6 +1386,7 @@ public class BinarySearch {
    *
    * @param key   the value to compare against
    * @param array the sorted array to search
+   * @param <T>   the type of elements in the array
    * @return the index of the last element less than key, if such an element exists; otherwise,
    * returns -(insertion point) - 1, where the insertion point is the index at which the key could
    * be inserted to maintain the sorted order.
@@ -1268,15 +1400,55 @@ public class BinarySearch {
    * sorted array of objects. The array must be sorted according to the order induced by the
    * specified comparator before calling this method.
    *
+   * @param key      the value to compare against
+   * @param array    the sorted array to search, which must be {@link Comparable}
+   * @param function a mapping function that extracts the comparable key from each list element
+   * @param <K>      the type of the key
+   * @param <T>      the type of elements in the array
+   * @return the index of the last element less than key, if such an element exists; otherwise,
+   * returns -(insertion point) - 1, where the insertion point is the index at which the key could
+   * be inserted to maintain the sorted order.
+   */
+  public static <K extends Comparable<K>, T> int indexOfLessThan(K key, T[] array,
+      Function<T, K> function) {
+    return indexOfLessThan(key, array, Comparator.naturalOrder(), function);
+  }
+
+  /**
+   * Performs a binary search to find the index of the last element less than the specified key in a
+   * sorted array of objects. The array must be sorted according to the order induced by the
+   * specified comparator before calling this method.
+   *
    * @param key        the value to compare against
    * @param array      the sorted array to search
    * @param comparator the comparator used to compare array elements and the search key
+   * @param <T>        the type of elements in the array
    * @return the index of the last element less than key, if such an element exists; otherwise,
    * returns -(insertion point) - 1, where the insertion point is the index at which the key could
    * be inserted to maintain the sorted order.
    */
   public static <T> int indexOfLessThan(T key, T[] array, Comparator<T> comparator) {
-    int firstIndex = firstIndexOf(key, array, comparator);
+    return indexOfLessThan(key, array, comparator, a -> a);
+  }
+
+  /**
+   * Performs a binary search to find the index of the last element less than the specified key in a
+   * sorted array of objects. The array must be sorted according to the order induced by the
+   * specified comparator before calling this method.
+   *
+   * @param key        the value to compare against
+   * @param array      the sorted array to search
+   * @param comparator the comparator used to compare array elements and the search key
+   * @param function   a mapping function that extracts the comparable key from each list element
+   * @param <K>        the type of the key
+   * @param <T>        the type of elements in the array
+   * @return the index of the last element less than key, if such an element exists; otherwise,
+   * returns -(insertion point) - 1, where the insertion point is the index at which the key could
+   * be inserted to maintain the sorted order.
+   */
+  public static <K, T> int indexOfLessThan(K key, T[] array, Comparator<K> comparator,
+      Function<T, K> function) {
+    int firstIndex = firstIndexOf(key, array, comparator, function);
     return firstIndex >= 0 ? firstIndex - 1 : -firstIndex - 2;
   }
 
@@ -1286,6 +1458,7 @@ public class BinarySearch {
    *
    * @param key  the value to search for
    * @param list the sorted list to search
+   * @param <T>  the type of elements in the list
    * @return the index of the last occurrence of the key if it is found; otherwise, returns
    * -(insertion point) - 1, where the insertion point is the index at which the key would be
    * inserted to maintain the sorted order. The return value is non-negative if and only if the key
@@ -1297,26 +1470,67 @@ public class BinarySearch {
 
   /**
    * Performs a binary search to find the index of the last occurrence of the specified key in the
+   * sorted list of objects. The list must be sorted in natural order before calling this method.
+   *
+   * @param key      the value to search for
+   * @param list     the sorted list to search
+   * @param function a mapping function that extracts the comparable key from each list element
+   * @param <K>      the type of the key, which must be {@link Comparable}
+   * @param <T>      the type of elements in the list
+   * @return the index of the last occurrence of the key if it is found; otherwise, returns
+   * -(insertion point) - 1, where the insertion point is the index at which the key would be
+   * inserted to maintain the sorted order. The return value is non-negative if and only if the key
+   * is found.
+   */
+  public static <K extends Comparable<K>, T> int lastIndexOf(K key, List<T> list,
+      Function<T, K> function) {
+    return lastIndexOf(key, list, Comparator.naturalOrder(), function);
+  }
+
+  /**
+   * Performs a binary search to find the index of the last occurrence of the specified key in the
    * sorted list of objects. The list must be sorted according to the order induced by the specified
    * comparator before calling this method.
    *
    * @param key        the value to search for
    * @param list       the sorted list to search
    * @param comparator the comparator used to compare list elements and the search key
+   * @param <T>        the type of elements in the list
    * @return the index of the last occurrence of the key if it is found; otherwise, returns
    * -(insertion point) - 1, where the insertion point is the index at which the key would be
    * inserted to maintain the sorted order. The return value is non-negative if and only if the key
    * is found.
    */
   public static <T> int lastIndexOf(T key, List<T> list, Comparator<T> comparator) {
+    return lastIndexOf(key, list, comparator, o -> o);
+  }
+
+  /**
+   * Performs a binary search to find the index of the last occurrence of the specified key in the
+   * sorted list of objects. The list must be sorted according to the order induced by the specified
+   * comparator before calling this method.
+   *
+   * @param key        the value to search for
+   * @param list       the sorted list to search
+   * @param comparator the comparator used to compare list elements and the search key
+   * @param function   a mapping function that extracts the comparable key from each list element
+   * @param <K>        the type of the key
+   * @param <T>        the type of elements in the list
+   * @return the index of the last occurrence of the key if it is found; otherwise, returns
+   * -(insertion point) - 1, where the insertion point is the index at which the key would be
+   * inserted to maintain the sorted order. The return value is non-negative if and only if the key
+   * is found.
+   */
+  public static <K, T> int lastIndexOf(K key, List<T> list, Comparator<K> comparator,
+      Function<T, K> function) {
     int index = Integer.MIN_VALUE;
     int left = 0, right = list.size() - 1;
     while (left <= right) {
       final int mid = (left + right) >>> 1;
-      if (0 == comparator.compare(list.get(mid), key)) {
+      if (0 == comparator.compare(function.apply(list.get(mid)), key)) {
         index = mid;
         left = mid + 1;
-      } else if (0 > comparator.compare(list.get(mid), key)) {
+      } else if (0 > comparator.compare(function.apply(list.get(mid)), key)) {
         left = mid + 1;
       } else {
         right = mid - 1;
@@ -1345,15 +1559,55 @@ public class BinarySearch {
    * in a sorted list of objects. The list must be sorted according to the order induced by the
    * specified comparator before calling this method.
    *
+   * @param key      the value to compare against
+   * @param list     the sorted list to search
+   * @param function a mapping function that extracts the comparable key from each list element
+   * @param <K>      the type of the key, which must be {@link Comparable}
+   * @param <T>      the type of elements in the list
+   * @return the index of the first element greater than key, if such an element exists; otherwise,
+   * returns -(insertion point) - 1, where the insertion point is the index at which the key would
+   * be inserted to maintain the sorted order.
+   */
+  public static <K extends Comparable<K>, T> int indexOfGreaterThan(K key, List<T> list,
+      Function<T, K> function) {
+    return indexOfGreaterThan(key, list, Comparator.naturalOrder(), function);
+  }
+
+  /**
+   * Performs a binary search to find the index of the first element greater than the specified key
+   * in a sorted list of objects. The list must be sorted according to the order induced by the
+   * specified comparator before calling this method.
+   *
    * @param key        the value to compare against
    * @param list       the sorted list to search
    * @param comparator the comparator used to compare list elements and the search key
+   * @param <T>        the type of elements in the list
    * @return the index of the first element greater than key, if such an element exists; otherwise,
    * returns -(insertion point) - 1, where the insertion point is the index at which the key would
    * be inserted to maintain the sorted order.
    */
   public static <T> int indexOfGreaterThan(T key, List<T> list, Comparator<T> comparator) {
-    int lastIndex = lastIndexOf(key, list, comparator);
+    return indexOfGreaterThan(key, list, comparator, o -> o);
+  }
+
+  /**
+   * Performs a binary search to find the index of the first element greater than the specified key
+   * in a sorted list of objects. The list must be sorted according to the order induced by the
+   * specified comparator before calling this method.
+   *
+   * @param key        the value to compare against
+   * @param list       the sorted list to search
+   * @param comparator the comparator used to compare list elements and the search key
+   * @param function   a mapping function that extracts the comparable key from each list element
+   * @param <K>        the type of the key
+   * @param <T>        the type of elements in the list
+   * @return the index of the first element greater than key, if such an element exists; otherwise,
+   * returns -(insertion point) - 1, where the insertion point is the index at which the key would
+   * be inserted to maintain the sorted order.
+   */
+  public static <K, T> int indexOfGreaterThan(K key, List<T> list, Comparator<K> comparator,
+      Function<T, K> function) {
+    int lastIndex = lastIndexOf(key, list, comparator, function);
     int insertionPoint = lastIndex >= 0 ? lastIndex + 1 : -lastIndex - 1;
     return 0 < insertionPoint && insertionPoint < list.size() ?
         insertionPoint : -insertionPoint - 1;
@@ -1365,6 +1619,7 @@ public class BinarySearch {
    *
    * @param key  the value to search for
    * @param list the sorted list to search
+   * @param <T>  the type of elements in the list
    * @return the index of the first occurrence of the key if it is found; otherwise, returns
    * -(insertion point) - 1, where the insertion point is the index at which the key would be
    * inserted to maintain the sorted order. The return value is non-negative if and only if the key
@@ -1379,23 +1634,65 @@ public class BinarySearch {
    * sorted list of objects. The list must be sorted according to the order induced by the specified
    * comparator before calling this method.
    *
+   * @param key      the value to search for
+   * @param list     the sorted list to search
+   * @param function a mapping function that extracts the comparable key from each list element
+   * @param <K>      the type of the key, which must be {@link Comparable}
+   * @param <T>      the type of elements in the list
+   * @return the index of the first occurrence of the key if it is found; otherwise, returns
+   * -(insertion point) - 1, where the insertion point is the index at which the key would be
+   * inserted to maintain the sorted order. The return value is non-negative if and only if the key
+   * is found.
+   */
+  public static <K extends Comparable<K>, T> int firstIndexOf(K key, List<T> list,
+      Function<T, K> function) {
+    return firstIndexOf(key, list, Comparator.naturalOrder(), function);
+  }
+
+  /**
+   * Performs a binary search to find the index of the first occurrence of the specified key in the
+   * sorted list of objects. The list must be sorted according to the order induced by the specified
+   * comparator before calling this method.
+   *
    * @param key        the value to search for
    * @param list       the sorted list to search
    * @param comparator the comparator used to compare list elements and the search key
+   * @param <T>        the type of elements in the list
    * @return the index of the first occurrence of the key if it is found; otherwise, returns
    * -(insertion point) - 1, where the insertion point is the index at which the key would be
    * inserted to maintain the sorted order. The return value is non-negative if and only if the key
    * is found.
    */
   public static <T> int firstIndexOf(T key, List<T> list, Comparator<T> comparator) {
+    return firstIndexOf(key, list, comparator, o -> o);
+  }
+
+  /**
+   * Performs a binary search to find the index of the first occurrence of the specified key in the
+   * sorted list of objects. The list must be sorted according to the order induced by the specified
+   * comparator before calling this method.
+   *
+   * @param key        the value to search for
+   * @param list       the sorted list to search
+   * @param comparator the comparator used to compare list elements and the search key
+   * @param function   a mapping function that extracts the comparable key from each list element
+   * @param <K>        the type of the key
+   * @param <T>        the type of elements in the list
+   * @return the index of the first occurrence of the key if it is found; otherwise, returns
+   * -(insertion point) - 1, where the insertion point is the index at which the key would be
+   * inserted to maintain the sorted order. The return value is non-negative if and only if the key
+   * is found.
+   */
+  public static <K, T> int firstIndexOf(K key, List<T> list, Comparator<K> comparator,
+      Function<T, K> function) {
     int index = Integer.MIN_VALUE;
     int left = 0, right = list.size() - 1;
     while (left <= right) {
       final int mid = (left + right) >>> 1;
-      if (0 == comparator.compare(list.get(mid), key)) {
+      if (0 == comparator.compare(function.apply(list.get(mid)), key)) {
         index = mid;
         right = mid - 1;
-      } else if (0 < comparator.compare(list.get(mid), key)) {
+      } else if (0 < comparator.compare(function.apply(list.get(mid)), key)) {
         right = mid - 1;
       } else {
         left = mid + 1;
@@ -1410,6 +1707,7 @@ public class BinarySearch {
    *
    * @param key  the value to compare against
    * @param list the sorted list to search
+   * @param <T>  the type of elements in the list
    * @return the index of the last element less than key, if such an element exists; otherwise,
    * returns -(insertion point) - 1, where the insertion point is the index at which the key could
    * be inserted to maintain the sorted order.
@@ -1423,15 +1721,55 @@ public class BinarySearch {
    * sorted list of objects. The list must be sorted according to the order induced by the specified
    * comparator before calling this method.
    *
+   * @param key      the value to compare against
+   * @param list     the sorted list to search
+   * @param function a mapping function that extracts the comparable key from each list element
+   * @param <K>      the type of the key
+   * @param <T>      the type of elements in the list
+   * @return the index of the last element less than key, if such an element exists; otherwise,
+   * returns -(insertion point) - 1, where the insertion point is the index at which the key could
+   * be inserted to maintain the sorted order.
+   */
+  public static <K extends Comparable<K>, T> int indexOfLessThan(K key, List<T> list,
+      Function<T, K> function) {
+    return indexOfLessThan(key, list, Comparator.naturalOrder(), function);
+  }
+
+  /**
+   * Performs a binary search to find the index of the last element less than the specified key in a
+   * sorted list of objects. The list must be sorted according to the order induced by the specified
+   * comparator before calling this method.
+   *
    * @param key        the value to compare against
    * @param list       the sorted list to search
    * @param comparator the comparator used to compare list elements and the search key
+   * @param <T>        the type of elements in the list
    * @return the index of the last element less than key, if such an element exists; otherwise,
    * returns -(insertion point) - 1, where the insertion point is the index at which the key could
    * be inserted to maintain the sorted order.
    */
   public static <T> int indexOfLessThan(T key, List<T> list, Comparator<T> comparator) {
-    int firstIndex = firstIndexOf(key, list, comparator);
+    return indexOfLessThan(key, list, comparator, o -> o);
+  }
+
+  /**
+   * Performs a binary search to find the index of the last element less than the specified key in a
+   * sorted list of objects. The list must be sorted according to the order induced by the specified
+   * comparator before calling this method.
+   *
+   * @param key        the value to compare against
+   * @param list       the sorted list to search
+   * @param comparator the comparator used to compare list elements and the search key
+   * @param function   a mapping function that extracts the comparable key from each list element
+   * @param <K>        the type of the key
+   * @param <T>        the type of elements in the list
+   * @return the index of the last element less than key, if such an element exists; otherwise,
+   * returns -(insertion point) - 1, where the insertion point is the index at which the key could
+   * be inserted to maintain the sorted order.
+   */
+  public static <K, T> int indexOfLessThan(K key, List<T> list, Comparator<K> comparator,
+      Function<T, K> function) {
+    int firstIndex = firstIndexOf(key, list, comparator, function);
     return firstIndex >= 0 ? firstIndex - 1 : -firstIndex - 2;
   }
 }
