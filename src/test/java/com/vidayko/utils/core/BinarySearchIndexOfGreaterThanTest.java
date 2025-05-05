@@ -891,6 +891,35 @@ class BinarySearchIndexOfGreaterThanTest {
   }
 
   @Test
+  public void indexOfGreaterThanListStringWithFunction_test() throws IOException {
+
+    final List<ListStringWithFunctionTestCase> testcases = loadTestcases(
+        this.getClass().getClassLoader(),
+        new TypeReference<List<ListStringWithFunctionTestCase>>() {
+        },
+        "testcases/com/vidayko/utils/core/BinarySearchIndexOfGreaterThanTest/StringTestCases.json"
+    );
+
+    for (ListStringWithFunctionTestCase testCase : testcases) {
+      Collections.sort(testCase.array);
+
+      Assertions.assertEquals(
+          testCase.expected,
+          indexOfGreaterThan(testCase.key.charAt(0), testCase.array, (String s) -> s.charAt(0))
+      );
+    }
+  }
+
+  @Data
+  static class ListStringWithFunctionTestCase {
+
+    String scenario;
+    String key;
+    List<String> array;
+    int expected;
+  }
+
+  @Test
   public void indexOfGreaterThanListStringWithComparator_test() throws IOException {
     final List<ListStringWithComparatorTestCase> testcases = JsonLoader.loadTestcases(
         this.getClass().getClassLoader(),
@@ -921,6 +950,64 @@ class BinarySearchIndexOfGreaterThanTest {
   }
 
   @Test
+  public void indexOfGreaterThanListStringWithComparatorAndFunction_test() throws IOException {
+    final List<ListStringWithComparatorAndFunctionTestCase> testcases = JsonLoader.loadTestcases(
+        this.getClass().getClassLoader(),
+        new TypeReference<List<ListStringWithComparatorAndFunctionTestCase>>() {
+        },
+        "testcases/com/vidayko/utils/core/BinarySearchIndexOfGreaterThanTest/StringWithComparatorTestCases.json",
+        "testcases/com/vidayko/utils/core/BinarySearchIndexOfGreaterThanTest/StringWithComparatorReverseTestCases.json"
+    );
+
+    for (ListStringWithComparatorAndFunctionTestCase testCase : testcases) {
+      final Comparator<Character> comparator =
+          testCase.reverseOrder ? Comparator.reverseOrder() : Comparator.naturalOrder();
+      Assertions.assertEquals(
+          testCase.expected,
+          indexOfGreaterThan(testCase.key.charAt(0), testCase.array, comparator,
+              (String s) -> s.charAt(0))
+      );
+    }
+  }
+
+  @Data
+  static class ListStringWithComparatorAndFunctionTestCase {
+
+    String scenario;
+    String key;
+    List<String> array;
+    boolean reverseOrder;
+    int expected;
+  }
+
+  @Test
+  public void indexOfGreaterThanListArrayWithFunction_test() throws IOException {
+    final List<ListArrayWithFunctionTestCase> testcases = JsonLoader.loadTestcases(
+        this.getClass().getClassLoader(),
+        new TypeReference<List<ListArrayWithFunctionTestCase>>() {
+        },
+        "testcases/com/vidayko/utils/core/BinarySearchIndexOfGreaterThanTest/ArrayTestCases.json"
+    );
+
+    for (ListArrayWithFunctionTestCase testCase : testcases) {
+
+      Assertions.assertEquals(
+          testCase.expected,
+          indexOfGreaterThan(testCase.key[0], testCase.array, (int[] arr) -> arr[0])
+      );
+    }
+  }
+
+  @Data
+  static class ListArrayWithFunctionTestCase {
+
+    String scenario;
+    int[] key;
+    int[][] array;
+    int expected;
+  }
+
+  @Test
   public void indexOfGreaterThanListArrayWithComparator_test() throws IOException {
     final List<ListArrayWithComparatorTestCase> testcases = JsonLoader.loadTestcases(
         this.getClass().getClassLoader(),
@@ -946,7 +1033,38 @@ class BinarySearchIndexOfGreaterThanTest {
 
     String scenario;
     int[] key;
-    List<int[]> array;
+    int[][] array;
+    boolean reverseOrder;
+    int expected;
+  }
+
+  @Test
+  public void indexOfGreaterThanListArrayWithComparatorAndFunction_test() throws IOException {
+    final List<ListArrayWithComparatorAndFunctionTestCase> testcases = JsonLoader.loadTestcases(
+        this.getClass().getClassLoader(),
+        new TypeReference<List<ListArrayWithComparatorAndFunctionTestCase>>() {
+        },
+        "testcases/com/vidayko/utils/core/BinarySearchIndexOfGreaterThanTest/ArrayWithComparatorTestCases.json",
+        "testcases/com/vidayko/utils/core/BinarySearchIndexOfGreaterThanTest/ArrayWithComparatorReverseTestCases.json"
+    );
+
+    for (ListArrayWithComparatorAndFunctionTestCase testCase : testcases) {
+      final Comparator<Integer> comparator = Comparator.naturalOrder();
+
+      Assertions.assertEquals(
+          testCase.expected,
+          indexOfGreaterThan(testCase.key[0], testCase.array,
+              testCase.reverseOrder ? comparator.reversed() : comparator, (int[] arr) -> arr[0])
+      );
+    }
+  }
+
+  @Data
+  static class ListArrayWithComparatorAndFunctionTestCase {
+
+    String scenario;
+    int[] key;
+    int[][] array;
     boolean reverseOrder;
     int expected;
   }

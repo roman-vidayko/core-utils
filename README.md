@@ -6,3 +6,6 @@ Java SE 8 compatible.
 
 ### com.vidayko.utils.core.BinarySearch
 Utility class providing extended binary search operations for primitive and object (generic) arrays/lists, with comparator support. Guarantees O(log n) time and O(1) space complexity.
+
+### com.vidayko.utils.core.BinarySearch (improved)
+Extended method interfaces in order to accept mapping functions, that extract the comparable keys from list/array elements.
